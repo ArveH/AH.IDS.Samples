@@ -4,6 +4,8 @@ namespace Client.MVC.Net6.Models
     {
         public string? RequestId { get; set; }
 
+        public string? ErrorMessage { get; set; }
+
         public bool ShowRequestId => !string.IsNullOrEmpty(RequestId);
     }
 }
