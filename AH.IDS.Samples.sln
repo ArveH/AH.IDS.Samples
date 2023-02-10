@@ -9,6 +9,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Net6", "Net6", "{FC83B749-F
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Client.MVC.Net6", "U4\Client.MVC.Net6\Client.MVC.Net6.csproj", "{45FD28AC-CAB9-4EF7-B079-68A50285A411}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Api.Net6", "U4\Api.Net6\Api.Net6.csproj", "{B292D14F-DE44-46EE-8FBF-E4F7BC58DDE2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -19,6 +21,10 @@ Global
 		{45FD28AC-CAB9-4EF7-B079-68A50285A411}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{45FD28AC-CAB9-4EF7-B079-68A50285A411}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{45FD28AC-CAB9-4EF7-B079-68A50285A411}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B292D14F-DE44-46EE-8FBF-E4F7BC58DDE2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B292D14F-DE44-46EE-8FBF-E4F7BC58DDE2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B292D14F-DE44-46EE-8FBF-E4F7BC58DDE2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B292D14F-DE44-46EE-8FBF-E4F7BC58DDE2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -26,6 +32,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{FC83B749-F781-4994-A5FA-8888FA5D06C5} = {187DB75F-C895-48AF-B1BA-0872BD1CC427}
 		{45FD28AC-CAB9-4EF7-B079-68A50285A411} = {FC83B749-F781-4994-A5FA-8888FA5D06C5}
+		{B292D14F-DE44-46EE-8FBF-E4F7BC58DDE2} = {FC83B749-F781-4994-A5FA-8888FA5D06C5}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {FEAB79D7-970A-4124-A53A-681F6CFBF781}
