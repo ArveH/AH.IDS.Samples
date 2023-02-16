@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Shared.Net6;
 
 namespace Client.MVC.Net6.Controllers;
 
@@ -56,6 +57,20 @@ public class HomeController : Controller
     public IActionResult Error()
     {
         return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+    }
+
+    public async Task<IActionResult> CallApi()
+    {
+        var token = await HttpContext.GetTokenAsync("access_token");
+
+        var client = _httpClientFactory.CreateClient();
+        client.SetBearerToken(token);
+
+        var apiUrl = _config.GetValue<string>("Endpoints:Api", "");
+        var response = await client.GetStringAsync(apiUrl + "/identity");
+        ViewBag.Json = response.PrettyPrintJson();
+
+        return View();
     }
 
     public async Task<IActionResult> RenewTokens()

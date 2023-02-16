@@ -12,4 +12,6 @@
     <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="6.0.13" />
   </ItemGroup>
 
+  <Import Project="..\..\Shared.Net6\Shared.Net6.projitems" Label="Shared" />
+
 </Project>

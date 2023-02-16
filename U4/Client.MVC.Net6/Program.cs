@@ -3,6 +3,8 @@ using IdentityModel.Client;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
+using Shared.Net6;
+
 
 namespace Client.MVC.Net6;
 
@@ -30,7 +32,7 @@ public class Program
             })
             .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
             {
-                // Not necessary, but makes it easier to see what's what in browser tools
+                // Not necessary, but makes it easier to see "what's what" in browser tools
                 options.Cookie.Name = "client.mvc.net6";
             })
             .AddOpenIdConnect(OpenIdConnectDefaults.AuthenticationScheme, options =>
@@ -47,9 +49,11 @@ public class Program
                 options.Scope.Add("openid");
                 options.Scope.Add("profile");
                 options.Scope.Add("email");
+                options.Scope.Add(Net6Constants.ApiName);
                 options.Scope.Add("offline_access");
 
-                // Save the tokens in a cookie
+                // keeps id_token smaller
+                options.GetClaimsFromUserInfoEndpoint = true;
                 options.SaveTokens = true;
 
                 // We use the query parameter "acr_values" to set tenant information
