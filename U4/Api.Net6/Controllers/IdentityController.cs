@@ -1,22 +1,23 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using ILogger = Serilog.ILogger;
 
 namespace Api.Net6.Controllers;
 
 [Route("identity")]
 public class IdentityController : ControllerBase
 {
-    private readonly ILogger<IdentityController> _logger;
+    private readonly ILogger _logger;
 
-    public IdentityController(ILogger<IdentityController> logger)
+    public IdentityController(ILogger logger)
     {
-        _logger = logger;
+        _logger = logger.ForContext<IdentityController>();
     }
 
     [HttpGet]
     public ActionResult Get()
     {
         var claims = User.Claims.Select(c => new { c.Type, c.Value });
-        _logger.LogInformation("claims: {claims}", claims);
+        _logger.Information("claims: {@claims}", claims);
 
         return new JsonResult(claims);
     }
