@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Logging;
 using Serilog;
+using Shared.Core31;
 
 namespace Api.Core31
 {
@@ -25,6 +26,15 @@ namespace Api.Core31
             Log.Information("Starting up Api.Core31...");
             services.AddSingleton(Log.Logger);
 
+            services.AddAuthentication("token")
+
+                // JWT tokens
+                .AddJwtBearer("token", options =>
+                {
+                    var authority = Configuration.GetValue<string>("Auth:Authority");
+                    options.Authority = authority;
+                    options.Audience = Core31Constants.ApiName;
+                });
             services.AddControllers();
         }
 
@@ -40,6 +50,7 @@ namespace Api.Core31
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

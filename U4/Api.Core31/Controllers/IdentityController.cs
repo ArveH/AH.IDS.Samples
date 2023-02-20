@@ -4,6 +4,7 @@ using System.Linq;
 
 namespace Api.Core31.Controllers
 {
+    [ApiController]
     [Route("identity")]
     public class IdentityController : ControllerBase
     {
