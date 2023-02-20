@@ -2,7 +2,9 @@ using System.IdentityModel.Tokens.Jwt;
 using IdentityModel.Client;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.IdentityModel.Logging;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
+using Serilog;
 using Shared.Net6;
 
 
@@ -12,7 +14,31 @@ public class Program
 {
     public static void Main(string[] args)
     {
+        IdentityModelEventSource.ShowPII = true;
+
+        Log.Logger = new LoggerConfiguration()
+            .WriteTo.Console()
+            .CreateBootstrapLogger();
+
+        Log.Information("Starting up Client.MVC.Net6...");
+
         var builder = WebApplication.CreateBuilder(args);
+        builder.Host.UseSerilog((context, config) =>
+        {
+            var path = context.Configuration.GetValue<string>("LogFileFullPath");
+            config
+                .ReadFrom.Configuration(context.Configuration)
+                .WriteTo.File(
+                    path,
+                    fileSizeLimitBytes: 50_000_000,
+                    rollOnFileSizeLimit: true,
+                    shared: true,
+                    flushToDiskInterval: TimeSpan.FromSeconds(1),
+                    outputTemplate:
+                    "{Timestamp:yyyyMMdd HH:mm:ss.fff} [{Level:u3}] {Message:lj}  {Properties:j} {Exception}{NewLine}");
+        });
+
+        builder.Services.AddSingleton(Log.Logger);
 
         JwtSecurityTokenHandler.DefaultMapInboundClaims = false;
 
@@ -66,6 +92,7 @@ public class Program
                         context.ProtocolMessage.AcrValues =
                             $"tenant:{tenant}";
                         if (!string.IsNullOrWhiteSpace(idp)) context.ProtocolMessage.AcrValues += $" loginidp:{idp}";
+                        Log.Logger.ForContext<Program>().Information("acr_values: {@AcrValues}", context.ProtocolMessage.AcrValues);
                     }
 
                     return Task.CompletedTask;
@@ -78,6 +105,7 @@ public class Program
         var app = builder.Build();
 
         // Configure the HTTP request pipeline.
+        app.UseSerilogRequestLogging();
         if (!app.Environment.IsDevelopment())
         {
             app.UseExceptionHandler("/Home/Error");

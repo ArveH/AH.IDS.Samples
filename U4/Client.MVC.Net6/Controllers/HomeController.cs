@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Net6;
+using ILogger = Serilog.ILogger;
 
 namespace Client.MVC.Net6.Controllers;
 
@@ -16,18 +17,18 @@ public class HomeController : Controller
     private readonly IDiscoveryCache _discoveryCache;
     private readonly IHttpClientFactory _httpClientFactory;
     private readonly IConfiguration _config;
-    private readonly ILogger<HomeController> _logger;
+    private readonly ILogger _logger;
 
     public HomeController(
         IHttpClientFactory httpClientFactory,
         IConfiguration config,
         IDiscoveryCache discoveryCache,
-        ILogger<HomeController> logger)
+        ILogger logger)
     {
         _httpClientFactory = httpClientFactory;
         _config = config;
         _discoveryCache = discoveryCache;
-        _logger = logger;
+        _logger = logger.ForContext<HomeController>();
     }
 
     [AllowAnonymous]
@@ -43,6 +44,7 @@ public class HomeController : Controller
 
     public IActionResult Logout()
     {
+        _logger.Information("Logging out...");
         return SignOut(
             OpenIdConnectDefaults.AuthenticationScheme,
             CookieAuthenticationDefaults.AuthenticationScheme);
@@ -66,22 +68,29 @@ public class HomeController : Controller
         var client = _httpClientFactory.CreateClient();
         client.SetBearerToken(token);
 
-        var apiUrl = _config.GetValue<string>("Endpoints:Api", "");
-        var response = await client.GetStringAsync(apiUrl + "/identity");
+        var apiUrl = _config.GetValue<string>("Endpoints:Api", "") + "/identity";
+        _logger.Information("Requesting '{apiUrl}'", apiUrl);
+        var response = await client.GetStringAsync(apiUrl);
         ViewBag.Json = response.PrettyPrintJson();
-
+        _logger.Information("Response from API: {json}", ViewBag.Json);
         return View();
     }
 
     public async Task<IActionResult> RenewTokens()
     {
         var disco = await _discoveryCache.GetAsync();
-        if (disco.IsError) throw new Exception(disco.Error);
+        if (disco.IsError)
+        {
+            _logger.Error("Can't get Discovery document");
+            throw new Exception(disco.Error);
+        }
 
         var rt = await HttpContext.GetTokenAsync("refresh_token");
         var tokenClient = _httpClientFactory.CreateClient();
         var clientId = _config.GetValue<string>("Auth:Client");
         var clientSecret = _config.GetValue<string>("Auth:ClientSecret");
+        _logger.Information("Token request: Endpoint='{TokenEndpoint}', Token='{RefreshToken}', ClientId='{ClientId}', Secret={Secret}",
+            disco.TokenEndpoint, rt, clientId, $"{clientSecret[..3]}...{clientSecret[^3..]}");
 
         var tokenResult = await tokenClient.RequestRefreshTokenAsync(new RefreshTokenRequest
         {
@@ -111,6 +120,8 @@ public class HomeController : Controller
             await HttpContext.SignInAsync("Cookies", info.Principal, info.Properties);
             return Redirect("~/Home/Secure");
         }
+
+        _logger.Error("Renew token failed: {errorMsg}", tokenResult.Error);
 
         return View("Error", new ErrorViewModel
         {
