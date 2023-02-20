@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="IdentityModel" Version="4.6.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="3.1.32" />
+    <PackageReference Include="Serilog" Version="2.12.0" />
+    <PackageReference Include="Serilog.AspNetCore" Version="3.4.0" />
+    <PackageReference Include="Serilog.Sinks.File" Version="4.1.0" />
+  </ItemGroup>
+
+  <Import Project="..\..\Shared.Core31\Shared.Core31.projitems" Label="Shared" />
+
+  <Import Project="..\..\Shared.Common\Shared.Common.projitems" Label="Shared" />
+
+</Project>

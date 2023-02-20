@@ -13,6 +13,14 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Api.Net6", "U4\Api.Net6\Api
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Shared.Net6", "Shared.Net6\Shared.Net6.shproj", "{C33B062C-0C2D-431F-96E4-8B4D3A853A3F}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core31", "Core31", "{8F1885BC-E880-4DDE-A391-5541B5B539B6}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Shared.Core31", "Shared.Core31\Shared.Core31.shproj", "{F6DE09D9-8FFD-4899-9130-2488182E771A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Client.MVC.Core31", "U4\Client.MVC.Core31\Client.MVC.Core31.csproj", "{C75B9EC8-4BE7-4579-AABB-C989A2933C03}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Shared.Common", "Shared.Common\Shared.Common.shproj", "{63B1660A-57DD-46AF-A6B9-E538DE0D3173}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +35,10 @@ Global
 		{B292D14F-DE44-46EE-8FBF-E4F7BC58DDE2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B292D14F-DE44-46EE-8FBF-E4F7BC58DDE2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B292D14F-DE44-46EE-8FBF-E4F7BC58DDE2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C75B9EC8-4BE7-4579-AABB-C989A2933C03}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C75B9EC8-4BE7-4579-AABB-C989A2933C03}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C75B9EC8-4BE7-4579-AABB-C989A2933C03}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C75B9EC8-4BE7-4579-AABB-C989A2933C03}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -36,13 +48,21 @@ Global
 		{45FD28AC-CAB9-4EF7-B079-68A50285A411} = {FC83B749-F781-4994-A5FA-8888FA5D06C5}
 		{B292D14F-DE44-46EE-8FBF-E4F7BC58DDE2} = {FC83B749-F781-4994-A5FA-8888FA5D06C5}
 		{C33B062C-0C2D-431F-96E4-8B4D3A853A3F} = {FC83B749-F781-4994-A5FA-8888FA5D06C5}
+		{8F1885BC-E880-4DDE-A391-5541B5B539B6} = {187DB75F-C895-48AF-B1BA-0872BD1CC427}
+		{F6DE09D9-8FFD-4899-9130-2488182E771A} = {8F1885BC-E880-4DDE-A391-5541B5B539B6}
+		{C75B9EC8-4BE7-4579-AABB-C989A2933C03} = {8F1885BC-E880-4DDE-A391-5541B5B539B6}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {FEAB79D7-970A-4124-A53A-681F6CFBF781}
 	EndGlobalSection
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		Shared.Common\Shared.Common.projitems*{45fd28ac-cab9-4ef7-b079-68a50285a411}*SharedItemsImports = 5
 		Shared.Net6\Shared.Net6.projitems*{45fd28ac-cab9-4ef7-b079-68a50285a411}*SharedItemsImports = 5
+		Shared.Common\Shared.Common.projitems*{63b1660a-57dd-46af-a6b9-e538de0d3173}*SharedItemsImports = 13
 		Shared.Net6\Shared.Net6.projitems*{b292d14f-de44-46ee-8fbf-e4f7bc58dde2}*SharedItemsImports = 5
 		Shared.Net6\Shared.Net6.projitems*{c33b062c-0c2d-431f-96e4-8b4d3a853a3f}*SharedItemsImports = 13
+		Shared.Common\Shared.Common.projitems*{c75b9ec8-4be7-4579-aabb-c989a2933c03}*SharedItemsImports = 5
+		Shared.Core31\Shared.Core31.projitems*{c75b9ec8-4be7-4579-aabb-c989a2933c03}*SharedItemsImports = 5
+		Shared.Core31\Shared.Core31.projitems*{f6de09d9-8ffd-4899-9130-2488182e771a}*SharedItemsImports = 13
 	EndGlobalSection
 EndGlobal

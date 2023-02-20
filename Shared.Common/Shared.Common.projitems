@@ -3,12 +3,12 @@
   <PropertyGroup>
     <MSBuildAllProjects Condition="'$(MSBuildVersion)' == '' Or '$(MSBuildVersion)' &lt; '16.0'">$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
     <HasSharedItems>true</HasSharedItems>
-    <SharedGUID>c33b062c-0c2d-431f-96e4-8b4d3a853a3f</SharedGUID>
+    <SharedGUID>63b1660a-57dd-46af-a6b9-e538de0d3173</SharedGUID>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">
-    <Import_RootNamespace>Shared.Net6</Import_RootNamespace>
+    <Import_RootNamespace>Shared.Common</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)Net6Constants.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TokenResponseExtensions.cs" />
   </ItemGroup>
 </Project>

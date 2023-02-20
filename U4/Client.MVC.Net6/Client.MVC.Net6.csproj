@@ -17,4 +17,6 @@
 
   <Import Project="..\..\Shared.Net6\Shared.Net6.projitems" Label="Shared" />
 
+  <Import Project="..\..\Shared.Common\Shared.Common.projitems" Label="Shared" />
+
 </Project>

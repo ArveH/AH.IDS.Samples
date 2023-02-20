@@ -1,13 +1,13 @@
-﻿using System.Diagnostics;
-using System.Globalization;
-using Client.MVC.Net6.Models;
+﻿using Client.MVC.Net6.Models;
 using IdentityModel.Client;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Shared.Net6;
+using Shared.Common;
+using System.Diagnostics;
+using System.Globalization;
 using ILogger = Serilog.ILogger;
 
 namespace Client.MVC.Net6.Controllers;

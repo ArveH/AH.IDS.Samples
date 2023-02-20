@@ -20,8 +20,8 @@
 <dl>
     @{
         var authenticateResult = await Context.AuthenticateAsync();
-        ArgumentNullException.ThrowIfNull(authenticateResult);
-        ArgumentNullException.ThrowIfNull(authenticateResult.Properties);
+        if (authenticateResult == null) throw new ArgumentNullException(nameof(authenticateResult));
+        if (authenticateResult.Properties == null) throw new ArgumentNullException(nameof(authenticateResult.Properties));
         foreach (var prop in authenticateResult.Properties.Items)
         {
             <dt>@prop.Key</dt>

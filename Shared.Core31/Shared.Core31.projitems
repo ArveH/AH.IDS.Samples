@@ -3,12 +3,12 @@
   <PropertyGroup>
     <MSBuildAllProjects Condition="'$(MSBuildVersion)' == '' Or '$(MSBuildVersion)' &lt; '16.0'">$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
     <HasSharedItems>true</HasSharedItems>
-    <SharedGUID>c33b062c-0c2d-431f-96e4-8b4d3a853a3f</SharedGUID>
+    <SharedGUID>f6de09d9-8ffd-4899-9130-2488182e771a</SharedGUID>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">
-    <Import_RootNamespace>Shared.Net6</Import_RootNamespace>
+    <Import_RootNamespace>Shared.Core31</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)Net6Constants.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core31Constants.cs" />
   </ItemGroup>
 </Project>
