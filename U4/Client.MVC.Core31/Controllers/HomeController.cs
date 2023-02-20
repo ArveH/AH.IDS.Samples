@@ -7,13 +7,12 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Serilog;
+using Shared.Common;
 using System;
 using System.Diagnostics;
 using System.Globalization;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Shared.Common;
-using Shared.Core31;
 
 namespace Client.MVC.Core31.Controllers
 {

@@ -10,7 +10,9 @@ using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Serilog;
 using Shared.Core31;
 using System.IdentityModel.Tokens.Jwt;
+using System.Net.Http;
 using System.Threading.Tasks;
+using IdentityModel.Client;
 
 namespace Client.MVC.Core31
 {
@@ -33,6 +35,14 @@ namespace Client.MVC.Core31
             JwtSecurityTokenHandler.DefaultMapInboundClaims = false;
 
             services.AddSingleton(Log.Logger);
+            services.AddHttpClient();
+            services.AddSingleton<IDiscoveryCache>(r =>
+            {
+                var authority = Configuration.GetValue<string>("Auth:Authority");
+                var factory = r.GetRequiredService<IHttpClientFactory>();
+                return new DiscoveryCache(authority, () => factory.CreateClient());
+            });
+
             services.AddAuthentication(options =>
                 {
                     options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
