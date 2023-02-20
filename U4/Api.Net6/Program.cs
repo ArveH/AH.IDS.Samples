@@ -49,7 +49,6 @@ namespace Api.Net6
                     options.Authority = authority;
                     options.Audience = Net6Constants.ApiName;
 
-                    options.TokenValidationParameters.ValidIssuer = authority;
                     options.TokenValidationParameters.ValidTypes = new[] { "at+jwt" };
                     options.MapInboundClaims = false;
 

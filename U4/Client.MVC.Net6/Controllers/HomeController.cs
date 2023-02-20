@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Shared.Common;
 using System.Diagnostics;
 using System.Globalization;
+using System.Net.Http.Headers;
 using ILogger = Serilog.ILogger;
 
 namespace Client.MVC.Net6.Controllers;
@@ -65,13 +66,27 @@ public class HomeController : Controller
     {
         var token = await HttpContext.GetTokenAsync("access_token");
 
-        var client = _httpClientFactory.CreateClient();
-        client.SetBearerToken(token);
-
-        var apiUrl = _config.GetValue<string>("Endpoints:Api", "") + "/identity";
+        var apiUrl = _config.GetValue("Endpoints:Api", "") + "/identity";
         _logger.Information("Requesting '{apiUrl}'", apiUrl);
-        var response = await client.GetStringAsync(apiUrl);
-        ViewBag.Json = response.PrettyPrintJson();
+        var msg = new HttpRequestMessage(HttpMethod.Get, apiUrl);
+        msg.Headers.Authorization = new AuthenticationHeaderValue("bearer", token);
+
+        var client = _httpClientFactory.CreateClient();
+
+        _logger.Information("Requesting '{@Msg}'", msg);
+        var response = await client.SendAsync(msg);
+        if (!response.IsSuccessStatusCode)
+        {
+            _logger.Error(response.ReasonPhrase??"No ResponsePhrase");
+            var contentStr = await response.Content.ReadAsStringAsync();
+            if (!string.IsNullOrWhiteSpace(contentStr))
+                _logger.Error(contentStr);
+            return View();
+        }
+
+        var json = await response.Content.ReadAsStringAsync();
+        ViewBag.Json = json.PrettyPrintJson();
+
         _logger.Information("Response from API: {json}", ViewBag.Json);
         return View();
     }
