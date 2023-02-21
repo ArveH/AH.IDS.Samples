@@ -43,6 +43,19 @@ public class HomeController : Controller
         return View();
     }
 
+    public async Task<IActionResult> CallApiJS()
+    {
+        var token = await HttpContext.GetTokenAsync("access_token");
+        if (string.IsNullOrWhiteSpace(token))
+        {
+            _logger.Error("Can't get Access token when CallApiJS");
+            throw new ArgumentException(nameof(token));
+        }
+
+        ViewBag.Token = token;
+        return View();
+    }
+
     public IActionResult Logout()
     {
         _logger.Information("Logging out...");
@@ -65,6 +78,11 @@ public class HomeController : Controller
     public async Task<IActionResult> CallApi()
     {
         var token = await HttpContext.GetTokenAsync("access_token");
+        if (string.IsNullOrWhiteSpace(token))
+        {
+            _logger.Error("Can't get Access token when CallApi");
+            throw new ArgumentException(nameof(token));
+        }
 
         var apiUrl = _config.GetValue("Endpoints:Api", "") + "/identity";
         _logger.Information("Requesting '{apiUrl}'", apiUrl);
@@ -86,8 +104,15 @@ public class HomeController : Controller
 
         var json = await response.Content.ReadAsStringAsync();
         ViewBag.Json = json.PrettyPrintJson();
+        if (string.IsNullOrWhiteSpace(ViewBag.Json))
+        {
+            _logger.Error("No response from API");
+        }
+        else
+        {
+            _logger.Information("Response from API: {json}", ViewBag.Json);
+        }
 
-        _logger.Information("Response from API: {json}", ViewBag.Json);
         return View();
     }
 

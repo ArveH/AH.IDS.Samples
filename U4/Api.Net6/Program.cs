@@ -35,9 +35,20 @@ namespace Api.Net6
 
             builder.Services.AddSingleton(Log.Logger);
 
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("MyAllowSpecificOrigins",
+                    policy =>
+                    {
+                        policy.WithOrigins(
+                                "https://localhost:7123"
+                                )
+                            .AllowAnyHeader()
+                            .AllowAnyMethod();
+                    });
+            });
             builder.Services.AddControllers();
 
-            //builder.Services.AddCors();
             builder.Services.AddDistributedMemoryCache();
 
             builder.Services.AddAuthentication("token")
@@ -69,18 +80,9 @@ namespace Api.Net6
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
+            app.UseCors("MyAllowSpecificOrigins");
             app.UseSerilogRequestLogging();
             app.UseHttpsRedirection();
-
-            //app.UseCors(policy =>
-            //{
-            //    policy.WithOrigins(
-            //        "https://localhost:44300");
-
-            //    policy.AllowAnyHeader();
-            //    policy.AllowAnyMethod();
-            //    policy.WithExposedHeaders("WWW-Authenticate");
-            //});
 
             app.UseAuthentication();
             app.UseAuthorization();
