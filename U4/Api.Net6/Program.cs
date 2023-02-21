@@ -49,7 +49,8 @@ namespace Api.Net6
                     options.Authority = authority;
                     options.Audience = Net6Constants.ApiName;
 
-                    options.TokenValidationParameters.ValidTypes = new[] { "at+jwt" };
+                    options.TokenValidationParameters.ValidTypes = new[] { "JWT", "at+jwt" };
+
                     options.MapInboundClaims = false;
 
                     // if token does not contain a dot, it is a reference token
