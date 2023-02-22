@@ -79,6 +79,12 @@ namespace Api.Net6
 
             var app = builder.Build();
 
+            app.Use(async (ctx, next) =>
+            {
+                var headers = ctx.Request.Headers;
+                Log.Logger.ForContext<Program>().Debug("Request headers: {@Headers}", headers);
+                await next();
+            });
             // Configure the HTTP request pipeline.
             app.UseCors("MyAllowSpecificOrigins");
             app.UseSerilogRequestLogging();

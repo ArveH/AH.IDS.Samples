@@ -53,6 +53,7 @@ public class HomeController : Controller
         }
 
         ViewBag.Token = token;
+        ViewBag.Path = _config.GetValue("Endpoints:Api", "https://localhost:6001") + "/identity";
         return View();
     }
 
