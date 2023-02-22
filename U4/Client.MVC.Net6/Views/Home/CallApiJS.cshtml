@@ -2,10 +2,10 @@
 <div class="text-center">
     <h1>API Response with JavaScript</h1>
 </div>
-<input type="button" value="Call API" onclick="CallApiJS('@ViewBag.Path', '@ViewBag.Token')" />
-
+<input type="button" value="Call API" onclick="CallApiJS('@ViewBag.Api', '@ViewBag.Token')" />
+<input type="button" value="Call Open API" onclick="CallOpenApiJS('@ViewBag.Api')" />
 <div>
-    <span id='apiClaims'></span>
+    <span id='apiResult'></span>
 </div>
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script src="~/js/site.js"></script>

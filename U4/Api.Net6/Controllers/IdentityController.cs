@@ -3,7 +3,8 @@ using ILogger = Serilog.ILogger;
 
 namespace Api.Net6.Controllers;
 
-[Route("identity")]
+[Route("[controller]")]
+[ApiController]
 public class IdentityController : ControllerBase
 {
     private readonly ILogger _logger;
