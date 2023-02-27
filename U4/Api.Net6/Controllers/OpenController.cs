@@ -28,6 +28,7 @@ namespace Api.Net6.Controllers
             _logger.Information("Responding with {Now}. Origin: {Origin}. AccessControlAllowOrigin: *", 
                 now, Request.Headers.Origin);
             Response.Headers.AccessControlAllowOrigin = "*";
+            Response.Headers.AccessControlExposeHeaders = "*";
             return new[] { "Simple Request: ", now };
         }
     }

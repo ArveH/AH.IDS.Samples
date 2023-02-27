@@ -34,7 +34,7 @@ function CallApiJS(host, token) {
 }
 
 function SimpleRequestUsingFetch(host) {
-    const remoteResponse = document.getElementById('simpleRequestResponse');
+    const remoteResponse = document.getElementById('simpleRequestFetchResponse');
     console.info("Starting SimpleRequestUsingFetch...")
     console.info("Host: ", host)
     fetch(host + '/open',
@@ -63,4 +63,46 @@ function SimpleRequestUsingFetch(host) {
         console.error("Caught exception: ", error);
     });
     console.info("SimpleRequestUsingFetch finished")
+}
+
+function SimpleRequestUsingXhr(host) {
+    const remoteResponse = document.getElementById('simpleRequestXhrResponse');
+    console.info("Starting SimpleRequestUsingXhr...")
+    console.info("Host: ", host)
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', host + '/open');
+    xhr.setRequestHeader('x-arve', 'just testing');
+    xhr.onreadystatechange = () => {
+        if (xhr.readyState === XMLHttpRequest.HEADERS_RECEIVED) {
+            const headers = xhr.getAllResponseHeaders().trim().split(/[\r\n]+/);
+            console.info('Number of headers: ' + headers.length);
+            headers.forEach((line) => {
+                const parts = line.split(': ');
+                const header = parts.shift();
+                const value = parts.join(': ');
+                console.debug(`${header}: ${value}`);
+            });
+        }
+    }
+    xhr.onload = function (e) {
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+            if (xhr.status === 200) {
+                console.info(`redystate is ${xhr.readystate}`)
+                console.info("Response OK");
+                remoteResponse.innerText = JSON.parse(xhr.responseText);
+            } else {
+                console.error(xhr.statusText);
+            }
+        }
+        else {
+            console.info('some shit happened')
+            console.info('redystate is ' + xhr.readystate)
+        }
+    };
+    xhr.onerror = function (e) {
+        remoteResponse.innerText = 'An error occurred: ' + xhr.statusText;
+        console.error("Caught exception: ", xhr.statusText);
+    };
+    xhr.send()
+    console.info("SimpleRequestUsingXhr finished")
 }
