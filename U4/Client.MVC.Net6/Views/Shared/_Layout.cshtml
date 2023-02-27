@@ -25,7 +25,10 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Secure">Secure</a>
                         </li>
-                        @if (User.Identity is {IsAuthenticated: true })
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Open" asp-action="CallOpenEndpoints">Anonymous JS</a>
+                        </li>
+                        @if (User.Identity is { IsAuthenticated: true })
                         {
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="CallApiJS">Call API JS</a>

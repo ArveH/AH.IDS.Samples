@@ -1,3 +1,4 @@
+using System.Text;
 using Api.Net6.Helpers;
 using Microsoft.IdentityModel.Logging;
 using Serilog;
@@ -82,7 +83,13 @@ namespace Api.Net6
             app.Use(async (ctx, next) =>
             {
                 var headers = ctx.Request.Headers;
-                Log.Logger.ForContext<Program>().Debug("Request headers: {@Headers}", headers);
+                var sb = new StringBuilder();
+                sb.AppendLine("HEADERS:");
+                foreach (var header in headers)
+                {
+                    sb.AppendLine($"{header.Key}: {header.Value}");
+                }
+                Log.Logger.ForContext<Program>().Debug(sb.ToString());
                 await next();
             });
             // Configure the HTTP request pipeline.

@@ -33,12 +33,15 @@ function CallApiJS(host, token) {
     console.info("CallApiJS finished")
 }
 
-function CallOpenApiJS(host) {
+function SimpleRequestUsingFetch(host) {
     const remoteResponse = document.getElementById('apiResult');
-    console.info("Starting CallOpenApiJS...")
+    console.info("Starting SimpleRequestUsingFetch...")
     console.info("Host: ", host)
     fetch(host + '/open',
     {
+        headers: {
+            'origin': host
+        },
         method: 'GET',
     }).then(response => {
         if (response.ok) {
@@ -47,7 +50,7 @@ function CallOpenApiJS(host) {
                 remoteResponse.innerText = text;
             });
             console.info("HEADERS");
-            console.info("Content-Type: ", response.headers.get('Content-Type'));
+            console.info("Access-Control-Allow-Origin: ", response.headers.get('Access-Control-Allow-Origin'));
             response.headers.forEach(function(val, key) { console.log(key + ' -> ' + val); });
         }
         else {
@@ -58,5 +61,5 @@ function CallOpenApiJS(host) {
         remoteResponse.innerText = 'An error occurred: ' + error;
         console.error("Caught exception: ", error);
     });
-    console.info("CallOpenApiJS finished")
+    console.info("SimpleRequestUsingFetch finished")
 }
