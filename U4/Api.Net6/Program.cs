@@ -1,4 +1,3 @@
-using System.Text;
 using Api.Net6.Helpers;
 using Microsoft.IdentityModel.Logging;
 using Serilog;
@@ -82,15 +81,11 @@ namespace Api.Net6
 
             app.Use(async (ctx, next) =>
             {
-                var headers = ctx.Request.Headers;
-                var sb = new StringBuilder();
-                sb.AppendLine("HEADERS:");
-                foreach (var header in headers)
-                {
-                    sb.AppendLine($"{header.Key}: {header.Value}");
-                }
-                Log.Logger.ForContext<Program>().Debug(sb.ToString());
+                Log.Logger.ForContext<Program>().LogHeaders(
+                    "Request headers:", ctx.Request.Headers);
                 await next();
+                Log.Logger.ForContext<Program>().LogHeaders(
+                    "Response headers:", ctx.Response.Headers);
             });
             // Configure the HTTP request pipeline.
             app.UseCors("MyAllowSpecificOrigins");

@@ -25,7 +25,7 @@ namespace Api.Net6.Controllers
             //       must specify an origin in the value of the Access-Control-Allow-Origin
             //       header, instead of specifying the "*" wildcard.
             var now = DateTime.Now.ToString("s");
-            _logger.Information("Responding with {Now}. Origin: {Origin}. AccessControlAllowOrigin: *", 
+            _logger.Information("Responding with {Now}. Origin: {Origin}. AccessControlAllowOrigin: *",
                 now, Request.Headers.Origin);
             Response.Headers.AccessControlAllowOrigin = "*";
             Response.Headers.AccessControlExposeHeaders = "*";
