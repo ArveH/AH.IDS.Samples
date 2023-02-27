@@ -34,13 +34,14 @@ function CallApiJS(host, token) {
 }
 
 function SimpleRequestUsingFetch(host) {
-    const remoteResponse = document.getElementById('apiResult');
+    const remoteResponse = document.getElementById('simpleRequestResponse');
     console.info("Starting SimpleRequestUsingFetch...")
     console.info("Host: ", host)
     fetch(host + '/open',
     {
         headers: {
-            'origin': host
+            //'origin': host, // looks like the browser adds this automatically (all except Firefox)
+            'x-arve': 'just testing'
         },
         method: 'GET',
     }).then(response => {
