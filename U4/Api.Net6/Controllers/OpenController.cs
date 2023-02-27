@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Net6.Controllers
@@ -12,7 +11,7 @@ namespace Api.Net6.Controllers
         [HttpGet]
         public IEnumerable<string> Get()
         {
-            return new [] { "value1", "value2" };
+            return new[] { "Time is: ", DateTime.Now.ToString("s") };
         }
     }
 }

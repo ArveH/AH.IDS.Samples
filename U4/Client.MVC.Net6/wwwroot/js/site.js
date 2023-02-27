@@ -46,6 +46,9 @@ function CallOpenApiJS(host) {
             response.text().then(text => {
                 remoteResponse.innerText = text;
             });
+            console.info("HEADERS");
+            console.info("Content-Type: ", response.headers.get('Content-Type'));
+            response.headers.forEach(function(val, key) { console.log(key + ' -> ' + val); });
         }
         else {
             console.error("Response Not OK: ", response.status);
