@@ -1,23 +1,30 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using ILogger = Serilog.ILogger;
 
-namespace Client.MVC.Net6.Controllers
+namespace Client.MVC.Net6.Controllers;
+
+public class CorsController : Controller
 {
-    public class CorsController : Controller
+    private readonly IConfiguration _config;
+    private readonly ILogger _logger;
+
+    public CorsController(
+        IConfiguration config,
+            ILogger logger)
     {
-        private readonly IConfiguration _config;
+        _config = config;
+        _logger = logger;
+    }
 
-        public CorsController(IConfiguration config)
-        {
-            _config = config;
-        }
+    [AllowAnonymous]
+    public async Task<IActionResult> Cors()
+    {
+        var token = await HttpContext.GetTokenAsync("access_token");
 
-        [AllowAnonymous]
-        public async Task<IActionResult> Cors()
-        {
-            ViewBag.Api = _config.GetValue("Endpoints:Api", "https://localhost:6001");
-            await Task.CompletedTask;
-            return View();
-        }
+        ViewBag.Token = token??"";
+        ViewBag.Api = _config.GetValue("Endpoints:Api", "https://localhost:6001");
+        return View();
     }
 }

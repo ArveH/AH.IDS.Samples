@@ -1,7 +1,7 @@
 ﻿// Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
 // for details on configuring this project to bundle and minify static web assets.
 
-function CallApiJS(host, token) {
+function RequestUsingAuth(host, token) {
     const remoteResponse = document.getElementById('apiResult');
     console.info("Starting CallApiJS...")
     console.info("Host: ", host)
@@ -18,8 +18,8 @@ function CallApiJS(host, token) {
     }).then(response => {
         if (response.ok) {
             console.info("Response OK");
-            response.text().then(text => {
-                remoteResponse.innerText = text;
+            response.json().then(text => {
+                remoteResponse.innerText = JSON.stringify(text, null, 2);;
             });
         }
         else {
