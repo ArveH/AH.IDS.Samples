@@ -26,7 +26,7 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Secure">Secure</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Open" asp-action="CallOpenEndpoints">Anonymous JS</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Cors" asp-action="Cors">CORS</a>
                         </li>
                         @if (User.Identity is { IsAuthenticated: true })
                         {
