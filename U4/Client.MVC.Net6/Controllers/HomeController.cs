@@ -9,6 +9,7 @@ using Shared.Common;
 using System.Diagnostics;
 using System.Globalization;
 using System.Net.Http.Headers;
+using Shared.Net6;
 using ILogger = Serilog.ILogger;
 
 namespace Client.MVC.Net6.Controllers;
@@ -40,20 +41,6 @@ public class HomeController : Controller
 
     public IActionResult Secure()
     {
-        return View();
-    }
-
-    public async Task<IActionResult> CallApiJS()
-    {
-        var token = await HttpContext.GetTokenAsync("access_token");
-        if (string.IsNullOrWhiteSpace(token))
-        {
-            _logger.Error("Can't get Access token when CallApiJS");
-            throw new ArgumentException(nameof(token));
-        }
-
-        ViewBag.Token = token;
-        ViewBag.Api = _config.GetValue("Endpoints:Api", "https://localhost:6001");
         return View();
     }
 
@@ -136,6 +123,7 @@ public class HomeController : Controller
         var tokenResult = await tokenClient.RequestRefreshTokenAsync(new RefreshTokenRequest
         {
             Address = disco.TokenEndpoint,
+            Scope = Net6Constants.ApiName,
 
             ClientId = clientId,
             ClientSecret = clientSecret,
