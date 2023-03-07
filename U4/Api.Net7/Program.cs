@@ -86,8 +86,8 @@ namespace Api.Net7
 
             app.UseAuthorization();
 
-
-            app.MapControllers();
+            app.MapControllers()
+                .RequireAuthorization();
 
             app.Run();
         }
