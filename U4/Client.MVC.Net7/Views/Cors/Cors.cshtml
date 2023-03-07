@@ -1,0 +1,24 @@
+﻿<div class="text-center">
+    <h1>API Response with CORS</h1>
+</div>
+<div class="d-flex flex-column">
+    <div class="d-flex flex-row ">
+        <input class="btn btn-info m-2" type="button"
+               value="Simple Request using fetch" onclick="SimpleRequestUsingFetch('@ViewBag.Api')" />
+        <text type="text" id="simpleRequestFetchResponse" class="ms-3 p-2 border align-self-center w-100 fs-5" />
+    </div>
+    <div class="d-flex flex-row ">
+        <input class="btn btn-info m-2" type="button"
+               value="Simple Request using XHR" onclick="SimpleRequestUsingXhr('@ViewBag.Api')" />
+        <text type="text" id="simpleRequestXhrResponse" class="ms-3 p-2 border align-self-center w-100 fs-5" />
+    </div>
+    <div class="flex-row">
+        <input class="btn btn-info m-2 p-2" type="button"
+               value="Credentials is True" onclick="RequestUsingAuth('@ViewBag.Api', '@ViewBag.Token')" />
+    </div>
+    <div>
+        <pre id='apiResult'></pre>
+    </div>
+</div>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/js/site.js"></script>
