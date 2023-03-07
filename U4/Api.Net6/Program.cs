@@ -74,7 +74,7 @@ namespace Api.Net6
                     options.Authority = builder.Configuration.GetValue<string>("Auth:Authority");
 
                     options.ClientId = Net6Constants.ApiName;
-                    options.ClientSecret = builder.Configuration.GetValue<string>("Auth:Authority");
+                    options.ClientSecret = builder.Configuration.GetValue<string>("ApiSecret");
                 });
 
             var app = builder.Build();
