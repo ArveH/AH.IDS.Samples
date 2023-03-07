@@ -57,7 +57,7 @@ namespace Api.Net7
                 {
                     var authority = builder.Configuration.GetValue<string>("Auth:Authority");
                     options.Authority = authority;
-                    options.Audience = Net6Constants.ApiName;
+                    options.Audience = Net7Constants.ApiName;
 
                     options.TokenValidationParameters.ValidTypes = new[] { "JWT", "at+jwt" };
 
@@ -72,7 +72,7 @@ namespace Api.Net7
                 {
                     options.Authority = builder.Configuration.GetValue<string>("Auth:Authority");
 
-                    options.ClientId = Net6Constants.ApiName;
+                    options.ClientId = Net7Constants.ApiName;
                     options.ClientSecret = builder.Configuration.GetValue<string>("ApiSecret");
                 });
 
@@ -80,6 +80,8 @@ namespace Api.Net7
 
             // Configure the HTTP request pipeline.
 
+            app.UseCors("MyAllowSpecificOrigins");
+            app.UseSerilogRequestLogging();
             app.UseHttpsRedirection();
 
             app.UseAuthorization();

@@ -1,0 +1,31 @@
+﻿@using Microsoft.AspNetCore.Authentication
+
+<h2>Claims</h2>
+
+<div class="panel">
+    <a class="btn btn-primary" href="~/Home/RenewTokens">Renew Tokens</a>
+</div>
+
+
+<dl>
+    @foreach (var claim in User.Claims)
+    {
+        <dt>@claim.Type</dt>
+        <dd>@claim.Value</dd>
+    }
+</dl>
+
+<h2>Properties</h2>
+
+<dl>
+    @{
+        var authenticateResult = await Context.AuthenticateAsync();
+        ArgumentNullException.ThrowIfNull(authenticateResult);
+        ArgumentNullException.ThrowIfNull(authenticateResult.Properties);
+        foreach (var prop in authenticateResult.Properties.Items)
+        {
+            <dt>@prop.Key</dt>
+            <dd>@prop.Value</dd>
+        }
+    }
+</dl>

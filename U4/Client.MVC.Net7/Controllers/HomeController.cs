@@ -1,32 +1,162 @@
 ﻿using Client.MVC.Net7.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using IdentityModel.Client;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.AspNetCore.Authorization;
+using ILogger = Serilog.ILogger;
+using Microsoft.AspNetCore.Authentication;
+using Shared.Common;
+using System.Globalization;
+using System.Net.Http.Headers;
+using Shared.Net7;
 
-namespace Client.MVC.Net7.Controllers
+namespace Client.MVC.Net7.Controllers;
+
+public class HomeController : Controller
 {
-    public class HomeController : Controller
+    private readonly IDiscoveryCache _discoveryCache;
+    private readonly IHttpClientFactory _httpClientFactory;
+    private readonly IConfiguration _config;
+    private readonly ILogger _logger;
+
+    public HomeController(
+        IHttpClientFactory httpClientFactory,
+        IConfiguration config,
+        IDiscoveryCache discoveryCache,
+        ILogger logger)
     {
-        private readonly ILogger<HomeController> _logger;
+        _httpClientFactory = httpClientFactory;
+        _config = config;
+        _discoveryCache = discoveryCache;
+        _logger = logger.ForContext<HomeController>();
+    }
 
-        public HomeController(ILogger<HomeController> logger)
+    [AllowAnonymous]
+    public IActionResult Index()
+    {
+        return View();
+    }
+
+    public IActionResult Secure()
+    {
+        return View();
+    }
+
+    public IActionResult Logout()
+    {
+        _logger.Information("Logging out...");
+        return SignOut(
+            OpenIdConnectDefaults.AuthenticationScheme,
+            CookieAuthenticationDefaults.AuthenticationScheme);
+    }
+
+    public IActionResult Privacy()
+    {
+        return View();
+    }
+
+    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+    public IActionResult Error()
+    {
+        return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+    }
+
+    public async Task<IActionResult> CallApi()
+    {
+        var token = await HttpContext.GetTokenAsync("access_token");
+        if (string.IsNullOrWhiteSpace(token))
         {
-            _logger = logger;
+            _logger.Error("Can't get Access token when CallApi");
+            throw new ArgumentException(nameof(token));
         }
 
-        public IActionResult Index()
+        var apiUrl = _config.GetValue("Endpoints:Api", "") + "/identity";
+        _logger.Information("Requesting '{apiUrl}'", apiUrl);
+        var msg = new HttpRequestMessage(HttpMethod.Get, apiUrl);
+        msg.Headers.Authorization = new AuthenticationHeaderValue("bearer", token);
+
+        var client = _httpClientFactory.CreateClient();
+
+        _logger.Information("Requesting '{@Msg}'", msg);
+        var response = await client.SendAsync(msg);
+        if (!response.IsSuccessStatusCode)
         {
+            _logger.Error(response.ReasonPhrase??"No ResponsePhrase");
+            var contentStr = await response.Content.ReadAsStringAsync();
+            if (!string.IsNullOrWhiteSpace(contentStr))
+                _logger.Error(contentStr);
             return View();
         }
 
-        public IActionResult Privacy()
+        var json = await response.Content.ReadAsStringAsync();
+        ViewBag.Json = json.PrettyPrintJson();
+        if (string.IsNullOrWhiteSpace(ViewBag.Json))
         {
-            return View();
+            _logger.Error("No response from API");
+        }
+        else
+        {
+            _logger.Information("Response from API: {json}", ViewBag.Json);
         }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
+        return View();
+    }
+
+    public async Task<IActionResult> RenewTokens()
+    {
+        var disco = await _discoveryCache.GetAsync();
+        if (disco.IsError)
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            _logger.Error("Can't get Discovery document");
+            throw new Exception(disco.Error);
         }
+
+        var rt = await HttpContext.GetTokenAsync("refresh_token");
+        var tokenClient = _httpClientFactory.CreateClient();
+        var clientId = _config.GetValue<string>("Auth:Client");
+        var clientSecret = _config.GetValue<string>("Auth:ClientSecret");
+        _logger.Information("Token request: Endpoint='{TokenEndpoint}', Token='{RefreshToken}', ClientId='{ClientId}', Secret={Secret}",
+            disco.TokenEndpoint, rt, clientId, 
+            string.IsNullOrWhiteSpace(clientSecret) ? "": $"{clientSecret[..3]}...{clientSecret[^3..]}");
+
+        var tokenResult = await tokenClient.RequestRefreshTokenAsync(new RefreshTokenRequest
+        {
+            Address = disco.TokenEndpoint,
+            Scope = Net7Constants.ApiName,
+
+            ClientId = clientId,
+            ClientSecret = clientSecret,
+            RefreshToken = rt
+        });
+
+        if (!tokenResult.IsError)
+        {
+            // Just in case you want to look at the old token during debugging
+            var _ = await HttpContext.GetTokenAsync("id_token");
+            var newAccessToken = tokenResult.AccessToken;
+            var newRefreshToken = tokenResult.RefreshToken;
+            var expiresAt = DateTime.UtcNow + TimeSpan.FromSeconds(tokenResult.ExpiresIn);
+
+            var info = await HttpContext.AuthenticateAsync("Cookies");
+            ArgumentNullException.ThrowIfNull(info.Properties);
+
+            info.Properties.UpdateTokenValue("refresh_token", newRefreshToken);
+            info.Properties.UpdateTokenValue("access_token", newAccessToken);
+            info.Properties.UpdateTokenValue("expires_at", expiresAt.ToString("o", CultureInfo.InvariantCulture));
+
+            ArgumentNullException.ThrowIfNull(info.Principal);
+            await HttpContext.SignInAsync("Cookies", info.Principal, info.Properties);
+            return Redirect("~/Home/Secure");
+        }
+
+        _logger.Error("Renew token failed: {errorMsg}", tokenResult.Error);
+
+        return View("Error", new ErrorViewModel
+        {
+            RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier,
+            ErrorMessage = tokenResult.Error
+        });
     }
 }
