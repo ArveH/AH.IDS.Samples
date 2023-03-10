@@ -1,4 +1,5 @@
 using Api.Net6.Helpers;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Logging;
 using Serilog;
 using Shared.Net6;
@@ -59,6 +60,15 @@ namespace Api.Net6
                     var authority = builder.Configuration.GetValue<string>("Auth:Authority");
                     options.Authority = authority;
                     options.Audience = Net6Constants.ApiName;
+
+                    options.Events = new JwtBearerEvents
+                    {
+                        OnAuthenticationFailed = context =>
+                        {
+                            Log.Error(context.Exception, "Authentication failed");
+                            return Task.CompletedTask;
+                        }
+                    };
 
                     options.TokenValidationParameters.ValidTypes = new[] { "JWT", "at+jwt" };
 

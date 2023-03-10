@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -6,6 +7,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Logging;
 using Serilog;
 using Shared.Core31;
+using System.Threading.Tasks;
 
 namespace Api.Core31
 {
@@ -34,6 +36,14 @@ namespace Api.Core31
                     var authority = Configuration.GetValue<string>("Auth:Authority");
                     options.Authority = authority;
                     options.Audience = Core31Constants.ApiName;
+                    options.Events = new JwtBearerEvents
+                    {
+                        OnAuthenticationFailed = context =>
+                        {
+                            Log.Error(context.Exception, "Authentication failed");
+                            return Task.CompletedTask;
+                        }
+                    };
                 });
             services.AddControllers();
         }

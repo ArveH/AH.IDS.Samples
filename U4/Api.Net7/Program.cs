@@ -1,4 +1,5 @@
 using Api.Net7.Helpers;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Logging;
 using Serilog;
 using Shared.Net7;
@@ -58,6 +59,15 @@ namespace Api.Net7
                     var authority = builder.Configuration.GetValue<string>("Auth:Authority");
                     options.Authority = authority;
                     options.Audience = Net7Constants.ApiName;
+
+                    options.Events = new JwtBearerEvents
+                    {
+                        OnAuthenticationFailed = context =>
+                        {
+                            Log.Error(context.Exception, "Authentication failed");
+                            return Task.CompletedTask;
+                        }
+                    };
 
                     options.TokenValidationParameters.ValidTypes = new[] { "JWT", "at+jwt" };
 
